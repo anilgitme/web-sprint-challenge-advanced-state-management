@@ -1,24 +1,77 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import { pushSmurfs } from '../actions/';
+
 
 class AddForm extends React.Component {
 
+    state = {
+            name: '',
+            position: '',
+            nickname: '',
+            description: ''        
+    }
+
+    handleChange = (event) => {
+        event.preventDefault();
+        this.setState({
+            ...this.state, [event.target.name]: event.target.value //using (this) because its a class component
+        });
+    }
+
+    handleSubmit = (event) => {
+        event.preventDefault();
+        const newSmurf = {
+            name: this.state.name,
+            position: this.state.position,
+            nickname: this.state.nickname,
+            description: this.state.description
+        }
+        this.props.pushSmurfs(newSmurf);
+        event.target.reset();
+    }
+
     render() {
+        // console.log(pushSmurfs())
         return(<section>
             <h2>Add Smurf</h2>
-            <form>
+            <form onSubmit={this.handleSubmit}>
                 <div className="form-group">
                     <label htmlFor="name">Name:</label><br/>
                     <input onChange={this.handleChange} name="name" id="name" />
                 </div>
 
-                <div data-testid="errorAlert" className="alert alert-danger" role="alert">Error: </div>
+                <div className="form-group">
+                    <label htmlFor="position">Position:</label><br/>
+                    <input onChange={this.handleChange} name="position" id="position" />
+                </div>
+                
+                <div className="form-group">
+                    <label htmlFor="nickname">Nickname:</label><br/>
+                    <input onChange={this.handleChange} name="nickname" id="nickname" />
+                </div>
+
+                <div className="form-group">
+                    <label htmlFor="description">Description:</label><br/>
+                    <textarea onChange={this.handleChange} name="description" id="description" />
+                </div>
+
+                <div data-testid="errorAlert" className="alert alert-danger" role="alert">Error: {this.props.error}</div>
                 <button>Submit Smurf</button>
             </form>
         </section>);
     }
 }
 
-export default AddForm;
+const mapStateToProps = state => { // giving AddForm the current state
+    return{
+        smurfs: state.smurfs,
+        error: state.error,
+        isPosting: state.isPosting
+    }
+}
+
+export default connect(mapStateToProps,{pushSmurfs})(AddForm); //connecting component with higher order component
 
 //Task List:
 //1. Add in all necessary import components and library methods.

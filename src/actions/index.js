@@ -1,19 +1,35 @@
 import axios from 'axios';
-
+//action creators for fetching
 export const FETCH_DATA_START = 'FETCH_DATA_START';
 export const FETCH_DATA_SUCCESS = 'FETCH_DATA_SUCCESS';
 export const FETCH_DATA_FAILED = 'FETCH_DATA_FAILED';
+//posting
+export const POST_DATA_START = 'POST_DATA_START';
+export const POST_DATA_SUCCESS = 'POST_DATA_SUCCESS';
+export const POST_DATA_FAILED = 'POST_SMURF_FAILED'
 
-export const getSmurfsData = () => dispatch => {
+export const getSmurfs = () => dispatch => {
     dispatch({ type: FETCH_DATA_START });
 
     axios.get('http://localhost:3333/smurfs')
-    .then(result => {
-        console.log(result.data);
-        dispatch({ type: FETCH_DATA_SUCCESS, payload: result.data })
-    })
-    .catch(error => dispatch({type: FETCH_DATA_FAILED, payload: error}))
+        .then(result => {
+            console.log(result.data);
+            dispatch({ type: FETCH_DATA_SUCCESS, payload: result.data })
+        })
+        .catch(error => dispatch({ type: FETCH_DATA_FAILED, payload: error.message }))
 };
+
+export const pushSmurfs = (newSmurf) => (dispatch) => {
+    dispatch({ type: POST_DATA_START });
+    axios.post('http://localhost:3333/smurfs', newSmurf)
+        .then(result => {
+            console.log(result);
+            dispatch({ type: POST_DATA_SUCCESS, payload: result.data })
+        })
+        .catch(error => {
+            dispatch({ type: POST_DATA_FAILED, payload: error.message })
+        })
+}
 
 //Task List:
 //1. Add fetch smurfs action: 

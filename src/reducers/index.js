@@ -1,12 +1,14 @@
-import { FETCH_DATA_START, FETCH_DATA_SUCCESS, FETCH_DATA_FAILED } from '..actions/'
+import { FETCH_DATA_START, FETCH_DATA_SUCCESS, FETCH_DATA_FAILED, POST_DATA_START, POST_DATA_SUCCESS, POST_DATA_FAILED } from '../actions/';
 
-export const initialState = {
+const initialState = {
     smurfs: [],
     error: '',
-    isFetching: false
+    isFetching: false,
+    isPosting: false
 }
 
 const reducer = (state = initialState, action) => {
+    
     console.log(action);
     switch (action.type) {
         case FETCH_DATA_START: 
@@ -19,8 +21,21 @@ const reducer = (state = initialState, action) => {
           };
         case FETCH_DATA_FAILED:
           return {
-              ...state, error: action.payload
+              ...state, isFetching: false, error: 'Cant find smurfs'
           };
+        case POST_DATA_START:
+            return {
+                ...state, isPosting: true,
+            }
+        case POST_DATA_SUCCESS:
+            return {
+                ...state, smurfs: action.payload, isPosting: false
+            }
+        case POST_DATA_FAILED:
+            return {
+                ...state, isPosting: false, error: 'Cant post smurfs'
+            }
+
         default:
             return state;
     }
